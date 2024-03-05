@@ -53,7 +53,7 @@ body > div {
 }
 
 .text-transition {
-  @apply transition-all ease-in-out opacity-55 hover:opacity-100;
+  @apply transition-all ease-in-out hover:opacity-100;
 }
 
 .sidebar {
