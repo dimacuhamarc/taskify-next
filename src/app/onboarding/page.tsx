@@ -1,7 +1,5 @@
 'use client'
 
-import type { Metadata } from 'next';
-
 import { useRouter } from 'next/navigation'
 
 import { useState, useEffect } from 'react';
@@ -32,7 +30,6 @@ import {
 } from '@/types/app-types';
 
 export default function Onboarding() {
-  // State Variables
   const [type, setType] = useState<OnbType>('SIGN_IN');
   const [onboardingMsg, setOnboardingMsg] = useState<string>(OnboardingMsg[type]);
   const [onboardingTitle, setOnboardingTitle] = useState<string>(OnboardingTtl[type]);

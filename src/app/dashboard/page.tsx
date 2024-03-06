@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 
-import { Sidebar } from "@/components/sidebar"
 import AppTemplate from "@/templates/app-template";
 import { UserData } from '@/types/app-types';
 
@@ -14,8 +13,9 @@ export default function Dashboard() {
     if (userData === null) {
       const user = GetUserInfo();
       setUserData(user);
+      console.log('got user data!');
     }
-  });
+  },[userData]);
 
   return (
     <AppTemplate>

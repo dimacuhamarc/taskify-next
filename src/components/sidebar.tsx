@@ -7,7 +7,7 @@ import {
 
 import axios from 'axios';
 import Icon from '@/components/icon';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useRouter } from 'next/navigation'
 import { 
   UserData,
@@ -37,7 +37,7 @@ export const Sidebar = () => {
       const user = GetUserInfo();
       setUserdata(user);
     }
-  });
+  },[userdata]);
 
   const fetchCategories = async () => {
     try {
