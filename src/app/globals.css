@@ -9,7 +9,7 @@
 } */
 
 body > div {
-  @apply px-12 py-8;
+  @apply px-12 py-8 pl-32;
 }
 
 .page-container {
@@ -70,4 +70,8 @@ body > div {
 
 .sidebar-animation {
   @apply transition-all duration-150 ease-linear;
+}
+
+.gradient-overlay {
+  @apply fixed top-0 left-0 w-full h-auto bg-gradient-to-b from-primary via-transparent to-primary z-50;
 }
