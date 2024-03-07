@@ -60,9 +60,11 @@ export default function Page({ params }: { params: {title: string}}) {
           }
         });
         if (response.data) {
-          const tasks = response.data.filter((task: any) => task.category_id === category.id);
-          setTasks(tasks);
-          console.log('got the tasks!')
+          if (response.data.length > 0) {
+            const tasks = response.data.filter((task: any) => task.category_id === category.id);
+            setTasks(tasks);
+            console.log('got the tasks!')
+          }
         }
       }
       catch (error) {
