@@ -18,6 +18,7 @@ import {
 
 import { 
   API_URL,
+  DeleteCategory,
 } from '@/utilities/services';
 
 export default function Page({ params }: { params: {title: string}}) {
@@ -72,6 +73,17 @@ export default function Page({ params }: { params: {title: string}}) {
       fetchTasks();
     }
   }, [category]);
+
+  const deleteHandler = async (id: number) => {
+    try {
+      const response = await DeleteCategory(id);
+      console.log(response);
+      router.push('/categories');
+    }
+    catch (error) {
+      console.error(error);
+    }
+  };
   
   return (
     <AppTemplate>
@@ -89,7 +101,7 @@ export default function Page({ params }: { params: {title: string}}) {
         <div className='*:mx-2 *:bg-opacity-25 *:text-neutral'> 
         {/* controls */}
           <button className='btn btn-square btn-primary hover:text-primary-content' onClick={() => router.push('/dashboard')}><Icon iconName='edit-fill' /></button>
-          <button className='btn btn-square btn-error hover:text-error-content' onClick={() => router.push('/dashboard')}><Icon iconName='delete-bin-6-fill' /></button>
+          <button className='btn btn-square btn-error hover:text-error-content' onClick={() => deleteHandler(category.id)}><Icon iconName='delete-bin-6-fill' /></button>
         </div>
       </div>
       {

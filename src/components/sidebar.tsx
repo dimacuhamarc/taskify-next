@@ -25,6 +25,7 @@ import {
   GetUserInfo,
   GetToken
 } from '@/utilities/services';
+import CreateCategoryModal from './modals';
 
 
 export const Sidebar = () => {
@@ -71,6 +72,7 @@ export const Sidebar = () => {
 
   useEffect(() => {
     setActiveRoute(pathname)
+    fetchCategories();
   }, [pathname]);
 
   return (
@@ -80,7 +82,7 @@ export const Sidebar = () => {
         <div className="flex flex-col gap-4 ">
           <NavItem icon='user-fill' tooltip='My Dashboard' link='/dashboard' isActive={activeRoute === '/dashboard'} />
           {
-            userCategories.slice(0,8).map((category, index) => {
+            (userCategories.length > 0) && userCategories.slice(0,8).map((category, index) => {
               return (
                 <NavItem key={index} icon='folder-fill' tooltip={category.title} link={`/categories/${category.title}`} isCategory isActive={activeRoute.replace(/%20/g, ' ') === `/categories/${category.title}`} />
               );
@@ -89,13 +91,13 @@ export const Sidebar = () => {
           {
             !(userCategories.length > 8) && <NavItem icon='more-fill' tooltip='View All Categories' link='/categories' isActive={activeRoute === '/categories'} />
           }
-          <NavItem icon='add-fill' tooltip='Create a Category' link='/create' />
+          <CreateCategoryButton icon='add-fill' tooltip='Create a Category' />
         </div>
         <div className='flex flex-col gap-4'>
           <SignOutButton icon='logout-box-fill' tooltip='Sign Out' />
         </div>
-        
       </div>
+      <CreateCategoryModal />
     </>
   )
 };
@@ -125,6 +127,32 @@ const NavItem = ({icon, tooltip, link, isActive, isCategory}: NavItemProps ) => 
   );
 };
 
+const CreateCategoryButton = ({ icon, tooltip }: SignOutButtonProps) => {
+  return (
+    <>
+      <button
+        className={`z-30 sidebar-item group sidebar-animation tooltip tooltip-right before:bg-opacity-25 animate-fade-up animate-once animate-ease-out animate-delay-400`}
+        data-tip={tooltip}
+        onClick={() => {
+          const modal = document.getElementById(
+            'create_category_modal'
+          ) as HTMLDialogElement;
+          if (modal && typeof modal.showModal === 'function') {
+            modal.showModal();
+          } else {
+            console.error('Modal element or showModal() method not available');
+            // Handle the case when modal or showModal() is not available
+          }
+        }}
+      >
+        <Icon
+          iconName={icon}
+          className={`text-lg text-primary sidebar-animation sidebar-icon group-hover:text-primary-content group-hover:text-xl`}
+        />
+      </button>
+    </>
+  );
+};
 
 const SignOutButton = ({icon, tooltip}: SignOutButtonProps ) => {
   const router = useRouter();

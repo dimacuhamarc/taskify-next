@@ -44,3 +44,16 @@ export const GetTasksFromCategory = async (category) => {
     return error.response.data.message;
   }
 }
+
+export const DeleteCategory = async (category) => {
+  try {
+    const response = await axios.delete(`${API_URL}/api/v1/categories/${category}`, {
+      headers: {
+        'authorization': sessionStorage.getItem('token')
+      }
+    })
+    return response.data.status;
+  } catch (error) {
+    return error.response.data.message;
+  }
+}
