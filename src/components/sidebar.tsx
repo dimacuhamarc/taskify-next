@@ -8,7 +8,7 @@ import {
 import axios from 'axios';
 import Icon from '@/components/icon';
 // import Link from 'next/link';
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { 
   UserData,
   UserCategories 
@@ -32,6 +32,7 @@ export const Sidebar = () => {
   const [activeRoute, setActiveRoute] = useState<string>('');
   const [userdata, setUserdata] = useState<UserData | null>(null);
 
+  const pathname = usePathname();
   useEffect(() => {
     if (userdata === null) {
       const user = GetUserInfo();
@@ -57,7 +58,7 @@ export const Sidebar = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       fetchCategories();
-    }, 3000); // Poll every 3 seconds, adjust as needed
+    }, 30000); // Poll every 3 seconds, adjust as needed
   
     return () => clearInterval(interval);
   }, []);
@@ -68,21 +69,25 @@ export const Sidebar = () => {
     }
   }, [userdata]);
 
+  useEffect(() => {
+    setActiveRoute(pathname)
+  }, [pathname]);
+
   return (
     <>
-      <div className="z-30 sidebar flex flex-col justify-between">
+      <div className="z-30 sidebar flex flex-col justify-between animate-fade animate-once animate-ease-out">
         <div className="gradient-overlay"></div>
         <div className="flex flex-col gap-4 ">
-          <NavItem icon='user-fill' tooltip='Profile' link='/profile' />
+          <NavItem icon='user-fill' tooltip='My Dashboard' link='/dashboard' isActive={activeRoute === '/dashboard'} />
           {
             userCategories.slice(0,8).map((category, index) => {
               return (
-                <NavItem key={index} icon='folder-fill' tooltip={category.title} link={`/category/${category}`} isCategory />
+                <NavItem key={index} icon='folder-fill' tooltip={category.title} link={`/categories/${category.title}`} isCategory isActive={activeRoute.replace(/%20/g, ' ') === `/categories/${category.title}`} />
               );
             })
           }
           {
-            !(userCategories.length > 8) && <NavItem icon='more-fill' tooltip='View All Categories' link='/categories' />
+            !(userCategories.length > 8) && <NavItem icon='more-fill' tooltip='View All Categories' link='/categories' isActive={activeRoute === '/categories'} />
           }
           <NavItem icon='add-fill' tooltip='Create a Category' link='/create' />
         </div>
@@ -100,20 +105,23 @@ const NavItem = ({icon, tooltip, link, isActive, isCategory}: NavItemProps ) => 
   const handleClick = () => {
     router.push(link);
   }
-
+  isActive ? console.log('active') : null;
   return (
-    <>
+    <div className='indicator animate-fade-up animate-once animate-ease-out animate-delay-700'>
+      {
+        isActive ? <span className="z-50 indicator-item indicator-middle rounded-badge badge badge-info badge-xs"></span> : null
+      }
     {
       isCategory ? 
-        (<button className="z-30  sidebar-item group sidebar-animation tooltip tooltip-right before:bg-opacity-25 before:z-50 after:z-50" data-tip={tooltip} onClick={handleClick}>
-          <Icon iconName={icon} className='text-lg text-primary group-hover:text-primary-content group-hover:text-xl sidebar-animation sidebar-icon' />
+        (<button className={`z-30 ${isActive ? 'sidebar-item-active' : 'sidebar-item'} group sidebar-animation tooltip tooltip-right before:bg-opacity-25`} data-tip={tooltip} onClick={handleClick}>
+          <Icon iconName={icon} className={`text-lg  ${isActive ? 'text-indicator-color' : 'text-primary'} sidebar-animation sidebar-icon group-hover:text-primary-content group-hover:text-xl`} />
         </button>)
         :
-        (<button className="z-30  sidebar-item group sidebar-animation tooltip tooltip-right before:bg-opacity-25" data-tip={tooltip} onClick={handleClick}>
-          <Icon iconName={icon} className='text-lg text-primary group-hover:text-primary-content group-hover:text-xl sidebar-animation sidebar-icon' />
+        (<button className={`z-30 ${isActive ? 'sidebar-item-active' : 'sidebar-item'} group sidebar-animation tooltip tooltip-right before:bg-opacity-25`} data-tip={tooltip} onClick={handleClick}>
+          <Icon iconName={icon} className={`text-lg  ${isActive ? 'text-indicator-color' : 'text-primary'} sidebar-animation sidebar-icon group-hover:text-primary-content group-hover:text-xl`} />
         </button>)
     }
-    </>
+    </div>
   );
 };
 
@@ -125,7 +133,7 @@ const SignOutButton = ({icon, tooltip}: SignOutButtonProps ) => {
     SignOutHandler();
   };
   return (
-    <button className="*:z-50 mt-4 sidebar-item group sidebar-animation tooltip tooltip-right before:bg-opacity-25" data-tip={tooltip} onClick={handleSignOut}>
+    <button className="*:z-50 mt-4 sidebar-item group sidebar-animation tooltip tooltip-right before:bg-opacity-25 animate-fade-up animate-once animate-ease-out animate-delay-400" data-tip={tooltip} onClick={handleSignOut}>
       <Icon iconName={icon} className='text-lg text-primary group-hover:text-primary-content group-hover:text-xl sidebar-animation sidebar-icon' />
     </button>
   );

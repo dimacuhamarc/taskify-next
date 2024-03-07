@@ -68,6 +68,10 @@ body > div {
   @apply flex items-center justify-center size-12 cursor-pointer ring-1 ring-primary ring-opacity-50 rounded-3xl bg-primary bg-opacity-90 text-primary-content;
 }
 
+.sidebar-item-active {
+  @apply flex items-center justify-center size-12 cursor-pointer ring-1 ring-primary ring-opacity-50 rounded-3xl bg-primary bg-opacity-90;
+}
+
 .sidebar-animation {
   @apply transition-all duration-150 ease-linear;
 }
@@ -75,3 +79,4 @@ body > div {
 .gradient-overlay {
   @apply fixed top-0 left-0 w-full h-auto bg-gradient-to-b from-primary via-transparent to-primary z-50;
 }
+

@@ -30,3 +30,17 @@ export const GetUserInfo = () => {
 export const GetToken = () => {
   return JSON.parse(sessionStorage.getItem('token'));
 }
+
+export const GetTasksFromCategory = async (category) => {
+  try {
+    const response = await axios.get(`${API_URL}/tasks`, {
+      headers: {
+        'authorization': sessionStorage.getItem('token')
+      }
+    })
+    
+    return response.data;
+  } catch (error) {
+    return error.response.data.message;
+  }
+}

@@ -19,6 +19,7 @@ const config: Config = {
           "success": "#60d273",
           "warning": "#d29d60",
           "error": "#d26060",
+          "indicator-color": "#9333ea",
         }
       }
     ],

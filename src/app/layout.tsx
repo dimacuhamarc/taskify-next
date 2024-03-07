@@ -21,6 +21,7 @@ export default function RootLayout({
         />
       </head>
       <body className="h-screen w-screen">
+      <Sidebar />
         {children}
       </body>
     </html>

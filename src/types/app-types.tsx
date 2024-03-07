@@ -12,3 +12,19 @@ export interface UserCategories {
   created_at?: string;
   updated_at?: string;
 }
+
+export const initialCategory: UserCategories = {
+  id: 0,
+  title: '',
+  subtitle: '',
+  user_id: 0
+};
+export interface UserTasks {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  created_at?: string;
+  updated_at?: string;
+  category_id?: number;
+}

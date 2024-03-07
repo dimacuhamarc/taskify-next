@@ -6,8 +6,8 @@ import { ReactNode } from "react";
 export default function AppTemplate({ children } : { children: ReactNode; } ) {
   return (
     <>
-      <Sidebar />
-      <div className="h-full w-full">
+
+      <div className="h-full w-full animate-fade-up animate-delay-700">
         {children}
       </div>
     </>
