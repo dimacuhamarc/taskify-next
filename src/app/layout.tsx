@@ -12,6 +12,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en" data-theme="taskify" >
       <head>
@@ -21,7 +22,7 @@ export default function RootLayout({
         />
       </head>
       <body className="h-screen w-screen">
-      <Sidebar />
+      {<Sidebar />}
         {children}
       </body>
     </html>

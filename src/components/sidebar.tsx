@@ -39,7 +39,7 @@ export const Sidebar = () => {
       const user = GetUserInfo();
       setUserdata(user);
     }
-  },[userdata]);
+  },[pathname]);
 
   const fetchCategories = async () => {
     try {
@@ -58,25 +58,36 @@ export const Sidebar = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      fetchCategories();
+      if (userdata !== null) {
+        fetchCategories();
+      }
     }, 30000); // Poll every 3 seconds, adjust as needed
   
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    if (userdata) {
+    if (userdata !== null) {
       fetchCategories();
     }
   }, [userdata]);
 
   useEffect(() => {
     setActiveRoute(pathname)
-    fetchCategories();
+    if (userdata !== null) {
+      fetchCategories();
+    }
   }, [pathname]);
 
+  const router = useRouter();
+  const handleSignOut = () => {
+    setUserdata(null);
+    router.push('/onboarding');
+    SignOutHandler();
+  };
+
   return (
-    <>
+    userdata && <>
       <div className="z-30 sidebar flex flex-col justify-between animate-fade animate-once animate-ease-out">
         <div className="gradient-overlay"></div>
         <div className="flex flex-col gap-4 ">
@@ -94,7 +105,7 @@ export const Sidebar = () => {
           <CreateCategoryButton icon='add-fill' tooltip='Create a Category' />
         </div>
         <div className='flex flex-col gap-4'>
-          <SignOutButton icon='logout-box-fill' tooltip='Sign Out' />
+          <SignOutButton icon='logout-box-fill' tooltip='Sign Out' signout={handleSignOut} />
         </div>
       </div>
       <CreateCategoryModal />
@@ -154,15 +165,13 @@ const CreateCategoryButton = ({ icon, tooltip }: SignOutButtonProps) => {
   );
 };
 
-const SignOutButton = ({icon, tooltip}: SignOutButtonProps ) => {
-  const router = useRouter();
-  const handleSignOut = () => {
-    router.push('/onboarding');
-    SignOutHandler();
-  };
+const SignOutButton: React.FC<SignOutButtonProps> = ({ icon, tooltip, signout }) => {
+  
   return (
-    <button className="*:z-50 mt-4 sidebar-item group sidebar-animation tooltip tooltip-right before:bg-opacity-25 animate-fade-up animate-once animate-ease-out animate-delay-400" data-tip={tooltip} onClick={handleSignOut}>
+    <button className="*:z-50 mt-4 sidebar-item group sidebar-animation tooltip tooltip-right before:bg-opacity-25 animate-fade-up animate-once animate-ease-out animate-delay-400" data-tip={tooltip} onClick={signout}>
       <Icon iconName={icon} className='text-lg text-primary group-hover:text-primary-content group-hover:text-xl sidebar-animation sidebar-icon' />
     </button>
   );
 };
+
+// 
