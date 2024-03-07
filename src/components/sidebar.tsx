@@ -152,7 +152,6 @@ const CreateCategoryButton = ({ icon, tooltip }: SignOutButtonProps) => {
             modal.showModal();
           } else {
             console.error('Modal element or showModal() method not available');
-            // Handle the case when modal or showModal() is not available
           }
         }}
       >

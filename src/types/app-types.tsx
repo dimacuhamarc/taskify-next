@@ -28,3 +28,8 @@ export interface UserTasks {
   updated_at?: string;
   category_id?: number;
 }
+
+export interface CreateUserCategory {
+  title: string;
+  subtitle: string;
+}
