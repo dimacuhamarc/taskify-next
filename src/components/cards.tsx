@@ -19,27 +19,27 @@ export function CategoryCard({ className, category }: CategoryCardProps) {
   const router = useRouter();
 
 
-  const fetchTasks = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/api/v1/tasks`, {
-        headers: {
-          authorization: sessionStorage.getItem('token'),
-          Accept: 'application/json',
-        },
-      });
-      if (response.data) {
-        const tasks = response.data.filter(
-          (task: any) => task.category_id === category.id
-        );
-        setThisCategoryTasks(tasks);
-        console.log('got the tasks!');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  
   useEffect(() => {
-    // fetch every 5 seconds
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/v1/tasks`, {
+          headers: {
+            authorization: sessionStorage.getItem('token'),
+            Accept: 'application/json',
+          },
+        });
+        if (response.data) {
+          const tasks = response.data.filter(
+            (task: any) => task.category_id === category.id
+          );
+          setThisCategoryTasks(tasks);
+          console.log('got the tasks!');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchTasks();
   }, [thisCategoryTasks.length]);
 

@@ -82,12 +82,12 @@ export const Sidebar = () => {
   const router = useRouter();
   const handleSignOut = () => {
     setUserdata(null);
-    router.push('/onboarding');
     SignOutHandler();
+    router.push('/onboarding');
   };
 
   return (
-    userdata && <>
+    userdata && (<>
       <div className="z-30 sidebar flex flex-col justify-between animate-fade animate-once animate-ease-out">
         <div className="gradient-overlay"></div>
         <div className="flex flex-col gap-4 ">
@@ -109,7 +109,7 @@ export const Sidebar = () => {
         </div>
       </div>
       <CreateCategoryModal />
-    </>
+    </>)
   )
 };
 

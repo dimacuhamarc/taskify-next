@@ -15,7 +15,7 @@ export const SignOutHandler = async () => {
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('token');
     console.log(response.data.status);
-    // location.reload();
+    location.reload();
     return response.data.status;
   } catch (error) {
     // console.log(error.response.data.status, error.message, error.response.data.message);
