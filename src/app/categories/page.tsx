@@ -30,6 +30,14 @@ export default function Categories() {
     fetchCategories();
   }, []);
 
+  const editHandler = () => {
+    const modal = document.getElementById('create_category_modal') as HTMLDialogElement;
+    if (modal && typeof modal.showModal === 'function') {
+      modal.showModal();
+    } else {
+      console.error('Modal element or showModal() method not available');
+    }
+  }
 
   return (
     <AppTemplate>
@@ -37,11 +45,15 @@ export default function Categories() {
         <h1 className='text-4xl font-bold'>Categories</h1>
         <div className="w-full grid auto-rows-[300px] grid-cols-4 gap-6">
           {
-            categories && categories.map((category, i) => {
-              return (
-                <CategoryCard key={i} className={`row-span-1 rounded-xl border-2 border-slate-400/10`} category={category} />
-              );
-            })
+            categories.length > 0 ? 
+              categories && categories.map((category, i) => {
+                return (
+                  <CategoryCard key={i} className={`row-span-1 rounded-xl border-2 border-slate-400/10`} category={category} />
+                );
+              }) : 
+              <>
+                <button className="btn btn-primary" onClick={editHandler}>Create a Category</button>
+              </>
           }
         </div>
       </div>

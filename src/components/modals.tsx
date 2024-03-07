@@ -42,9 +42,11 @@ export function CreateCategoryModal() {
 
   const onSubmit: SubmitHandler<CreateUserCategory> = (data) => {
     console.log(data);
-    if (existingCategories.some(category => category.title === data.title)) {
-      setErrorMessage('Category Already Exists');
-      setError(true);
+    if (existingCategories.length > 0) {
+      if (existingCategories.some(category => category.title === data.title)) {
+        setErrorMessage('Category Already Exists');
+        setError(true);
+      }
     } else {
       CreateCategoryHandler(data);
       reset(); // Reset form fields
