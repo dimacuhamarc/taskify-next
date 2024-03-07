@@ -3,6 +3,8 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
+import { useRouter } from 'next/navigation'
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '@/utilities/services';
@@ -15,8 +17,11 @@ export default function CreateCategoryModal() {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const router = useRouter();
+
   const onSubmit: SubmitHandler<CreateUserCategory> = (data) => {
     console.log(data);
+    CreateCategoryHandler(data);
     reset(); // Reset form fields
     const modal = document.getElementById(
       'create_category_modal'
@@ -26,8 +31,30 @@ export default function CreateCategoryModal() {
     } else {
       console.error('Modal element or showModal() method not available');
     }
+    router.push('/categories');
     setTimeout(() => (setErrorMessage(null), setError(false)), 5000);
   };
+
+  async function CreateCategoryHandler(data: CreateUserCategory) {
+    try {
+      const response = await axios.post(`${API_URL}/api/v1/categories`, data, {
+        headers: {
+          'authorization': sessionStorage.getItem('token'),
+          'Accept': 'application/json',
+        }
+      });
+      console.log(response);
+      if (response.status === 201) {
+        setErrorMessage('Category Created Successfully');
+        setError(false);
+      }
+    }
+    catch (error) {
+      console.error(error);
+      setErrorMessage('Error Creating Category');
+      setError(true);
+    }
+  }
 
   const handleClose = () => {
     reset(); // Reset form fields
