@@ -33,3 +33,6 @@ export interface CreateUserCategory {
   title: string;
   subtitle: string;
 }
+
+export interface EditUserCategory extends CreateUserCategory {
+}

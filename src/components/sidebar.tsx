@@ -25,7 +25,7 @@ import {
   GetUserInfo,
   GetToken
 } from '@/utilities/services';
-import CreateCategoryModal from './modals';
+import {CreateCategoryModal} from './modals';
 
 
 export const Sidebar = () => {

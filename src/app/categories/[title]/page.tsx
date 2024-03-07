@@ -20,6 +20,7 @@ import {
   API_URL,
   DeleteCategory,
 } from '@/utilities/services';
+import { EditCategoryModal } from '@/components/modals';
 
 export default function Page({ params }: { params: {title: string}}) {
   const router = useRouter();
@@ -86,42 +87,54 @@ export default function Page({ params }: { params: {title: string}}) {
       console.error(error);
     }
   };
+
+  const editHandler = () => {
+    const modal = document.getElementById('edit_category_modal') as HTMLDialogElement;
+    if (modal && typeof modal.showModal === 'function') {
+      modal.showModal();
+    } else {
+      console.error('Modal element or showModal() method not available');
+    }
+  }
   
   return (
-    <AppTemplate>
-      <div className='w-full flex flex-row justify-between items-center'>
-        <div className='flex flex-row justify-center items-center gap-4'>
-          <button className='btn btn-sm btn-square btn-outline' onClick={() => router.push('/dashboard')}><Icon iconName='arrow-left-fill' className='text-lg'></Icon></button>
-          <div className='flex flex-col'>
-            <h1 className='text-4xl font-bold'>{category.title}</h1>
-            <div className='flex flex-row items-center gap-4 -mt-4'>
-              <h3 className='text-xl opacity-55'>{category.subtitle}</h3>
-              <h3 className='mt-0.5 text-md opacity-55'>{'Last Edited '+formatTimeAgo(category.updated_at)}</h3>
+    <>
+      <EditCategoryModal category={category} />
+      <AppTemplate>
+        <div className='w-full flex flex-row justify-between items-center'>
+          <div className='flex flex-row justify-center items-center gap-4'>
+            <button className='btn btn-sm btn-square btn-outline' onClick={() => router.push('/dashboard')}><Icon iconName='arrow-left-fill' className='text-lg'></Icon></button>
+            <div className='flex flex-col'>
+              <h1 className='text-4xl font-bold'>{category.title}</h1>
+              <div className='flex flex-row items-center gap-4 -mt-4'>
+                <h3 className='text-xl opacity-55'>{category.subtitle}</h3>
+                <h3 className='mt-0.5 text-md opacity-55'>{'Last Edited '+formatTimeAgo(category.updated_at)}</h3>
+              </div>
             </div>
           </div>
+          <div className='*:mx-2 *:bg-opacity-25 *:text-neutral'> 
+          {/* controls */}
+            <button className='btn btn-square btn-primary hover:text-primary-content' onClick={() => editHandler()}><Icon iconName='edit-fill' /></button>
+            <button className='btn btn-square btn-error hover:text-error-content' onClick={() => deleteHandler(category.id)}><Icon iconName='delete-bin-6-fill' /></button>
+          </div>
         </div>
-        <div className='*:mx-2 *:bg-opacity-25 *:text-neutral'> 
-        {/* controls */}
-          <button className='btn btn-square btn-primary hover:text-primary-content' onClick={() => router.push('/dashboard')}><Icon iconName='edit-fill' /></button>
-          <button className='btn btn-square btn-error hover:text-error-content' onClick={() => deleteHandler(category.id)}><Icon iconName='delete-bin-6-fill' /></button>
-        </div>
-      </div>
-      {
-        tasks.map((task, index) => {
-          return (
-            <div key={index} className='w-full flex flex-row justify-between items-center gap-4'>
-              <div className='flex flex-row items-center gap-4'>
-                <div className='w-4 h-4 rounded-full bg-primary'></div>
-                <h3 className='text-lg'>{task.title}</h3>
+        {
+          tasks.map((task, index) => {
+            return (
+              <div key={index} className='w-full flex flex-row justify-between items-center gap-4'>
+                <div className='flex flex-row items-center gap-4'>
+                  <div className='w-4 h-4 rounded-full bg-primary'></div>
+                  <h3 className='text-lg'>{task.title}</h3>
+                </div>
+                <div className='flex flex-row items-center gap-4'>
+                  <h3 className='text-md opacity-55'>{formatTimeAgo(task.updated_at)}</h3>
+                  <button className='btn btn-sm btn-square btn-primary hover:text-primary-content' onClick={() => router.push('/dashboard')}><Icon iconName='edit-fill' /></button>
+                  <button className='btn btn-sm btn-square btn-error hover:text-error-content' onClick={() => router.push('/dashboard')}><Icon iconName='delete-bin-6-fill' /></button>
+                </div>
               </div>
-              <div className='flex flex-row items-center gap-4'>
-                <h3 className='text-md opacity-55'>{formatTimeAgo(task.updated_at)}</h3>
-                <button className='btn btn-sm btn-square btn-primary hover:text-primary-content' onClick={() => router.push('/dashboard')}><Icon iconName='edit-fill' /></button>
-                <button className='btn btn-sm btn-square btn-error hover:text-error-content' onClick={() => router.push('/dashboard')}><Icon iconName='delete-bin-6-fill' /></button>
-              </div>
-            </div>
-          );
-        })}
-    </AppTemplate>
+            );
+          })}
+      </AppTemplate>
+    </>
   );
 }
