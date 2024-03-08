@@ -20,7 +20,7 @@ import {
   API_URL,
   DeleteCategory,
 } from '@/utilities/services';
-import { EditCategoryModal } from '@/components/modals';
+import { CreateTaskModal, EditCategoryModal } from '@/components/modals';
 import { TaskCard } from '@/components/cards';
 
 export default function Page({ params }: { params: {title: string}}) {
@@ -64,7 +64,20 @@ export default function Page({ params }: { params: {title: string}}) {
         if (response.data) {
           if (response.data.length > 0) {
             const tasks = response.data.filter((task: any) => task.category_id === category.id);
-            setTasks(tasks);
+            const sortedTasks = tasks.sort((a: any, b: any) => {
+              return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+            });
+            sortedTasks.sort((a: any, b: any) => {
+              // sort by status
+              if (a.status.toUpperCase() < b.status.toUpperCase()) {
+                return 1;
+              }
+              if (a.status.toUpperCase() > b.status.toUpperCase()) {
+                return -1;
+              }
+              return 0;
+            });
+            setTasks(sortedTasks);
             console.log('got the tasks!')
           }
         }
@@ -97,10 +110,20 @@ export default function Page({ params }: { params: {title: string}}) {
       console.error('Modal element or showModal() method not available');
     }
   }
+
+  const addTaskHandler = () => {
+    const modal = document.getElementById('create_task_modal') as HTMLDialogElement;
+    if (modal && typeof modal.showModal === 'function') {
+      modal.showModal();
+    } else {
+      console.error('Modal element or showModal() method not available');
+    }
+  }
   
   return (
     <>
       <EditCategoryModal category={category} />
+      <CreateTaskModal category={category} />
       <AppTemplate>
         <div className='w-full flex flex-row justify-between items-center mb-8'>
           <div className='flex flex-row justify-center items-center gap-4'>
@@ -115,7 +138,7 @@ export default function Page({ params }: { params: {title: string}}) {
           </div>
           <div className='*:mx-2 *:bg-opacity-25 *:text-neutral'> 
           {/* controls */}
-          <button className='btn btn-square btn-primary hover:text-primary-content' onClick={() => console.log('add tasks handler')}><Icon iconName='add-fill' /></button>
+            <button className='btn btn-square btn-primary hover:text-primary-content' onClick={() => addTaskHandler()}><Icon iconName='add-fill' /></button>
             <button className='btn btn-square btn-primary hover:text-primary-content' onClick={() => editHandler()}><Icon iconName='edit-fill' /></button>
             <button className='btn btn-square btn-error hover:text-error-content' onClick={() => deleteHandler(category.id)}><Icon iconName='delete-bin-6-fill' /></button>
           </div>

@@ -36,3 +36,13 @@ export interface CreateUserCategory {
 
 export interface EditUserCategory extends CreateUserCategory {
 }
+
+export interface CreateUserTask {
+  title: string;
+  description: string;
+  status: string;
+  category_id: number;
+}
+
+export interface EditUserTask extends CreateUserTask {
+}

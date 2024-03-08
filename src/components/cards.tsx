@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import axios, {AxiosError} from 'axios';
 import { API_URL } from '@/utilities/services';
 
@@ -118,6 +118,7 @@ export function TaskCard({ className, task }: TaskCardProps) {
   const [isToggled, setIsToggled] = useState(false);
   const [TaskStatus, setTaskStatus] = useState<taskCardStatus>();
   const router = useRouter();
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   useEffect(() => {
     if (task.status.toUpperCase() === 'DONE') {
@@ -157,6 +158,7 @@ export function TaskCard({ className, task }: TaskCardProps) {
       setTaskStatus({status: 'DONE', color: 'btn-success', text:'text-success-content', bg: 'bg-success', icon: 'checkbox-fill'});
       updateStatus('DONE');
     }
+    forceUpdate();
   }
 
   return (
@@ -199,7 +201,7 @@ export function TaskCard({ className, task }: TaskCardProps) {
               <h1 className='text-xl'>Task Description</h1>
               <p className="text-lg font-light">{task.description}</p>
             </div>
-            <p className='text-base font-light'>Last Created {formatTimeAgo(task.created_at)}</p>
+            <p className='text-base font-light'>{(task.created_at === task.updated_at) ? ('Last Created ' + formatTimeAgo(task.created_at)) : ('Last Updated ' + formatTimeAgo(task.updated_at))}</p>
           </div>
         </div>
       }

@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '@/utilities/services';
-import { CreateUserCategory, EditUserCategory, UserCategories } from '@/types/app-types';
+import { CreateUserCategory, EditUserCategory, UserCategories, CreateUserTask } from '@/types/app-types';
 
 import Icon from '@/components/icon';
 import AlertBox from '@/components/alertbox';
@@ -243,6 +243,88 @@ export function EditCategoryModal({category}: {category: UserCategories; }) {
 
 
 export function CreateTaskModal({category}: {category: UserCategories; }) {
-  
+  const {register, handleSubmit, reset, formState: {errors} } = useForm<CreateUserTask>({criteriaMode:"all"});
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const [existingTasks, setExistingTasks] = useState<UserCategories[]>([])
+
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<CreateUserTask> = (data) => {
+    data.category_id = category.id;
+    data.status = 'IN PROGRESS';
+    CreateTaskHandler(data);
+    reset(); // Reset form fields
+    const modal = document.getElementById(
+      'create_task_modal'
+    ) as HTMLDialogElement;
+    if (modal && typeof modal.close === 'function') {
+      modal.close();
+    } else {
+      console.error('Modal element or showModal() method not available');
+    }
+    router.push('/categories/'+category.title);
+    location.reload();
+    setTimeout(() => (setErrorMessage(null), setError(false)), 5000);
+  };
+
+  async function CreateTaskHandler(data: CreateUserTask) {
+    try {
+      const response = await axios.post(`${API_URL}/api/v1/tasks`, data, {
+        headers: {
+          'authorization': sessionStorage.getItem('token'),
+          'Accept': 'application/json',
+          'Content-Type': 'application/json', // Add Content-Type header
+        }
+      });
+      console.log(response);
+      if (response.status === 201) {
+        setErrorMessage('Task Created Successfully');
+        setError(false);
+      }
+    }
+    catch (error) {
+      console.error(error);
+      setErrorMessage('Error Creating Task');
+      setError(true);
+    }
+  }
+
+  const handleClose = () => {
+    reset(); // Reset form fields
+    setErrorMessage(null); // Clear error message
+    setError(false); // Clear error state
+  };
+  return (
+    <dialog id="create_task_modal" className="modal backdrop-blur-sm">
+      <div className="modal-box">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center gap-6 mt-6 animate-fade animate-once animate-ease-in">
+          {/* Warning Boxes */}
+          {error && <AlertBox type='error'>{errorMessage}</AlertBox>}
+          {errors.title && <AlertBox type='warning'>Warning: {errors.title.message}!</AlertBox>}
+          {errors.description && <AlertBox type='warning'>Warning: {errors.description.message}!</AlertBox>}
+
+          {/* Input Fields */}
+          <h3 className="font-bold text-lg">Create a Task for {category.title}</h3>
+          <label htmlFor='input-title' className="input input-ghost form-transition input-primary flex items-center gap-2">
+            <Icon iconName="heading" />
+            <input {...register("title", {required: "Title is Required", max: {value:10, message: "Title is more than 10 characters", }})} id='input-title' type="text" className="grow" placeholder="Title" />
+          </label>
+          <label htmlFor='input-description' className="input input-ghost form-transition input-primary flex items-center gap-2">
+            <Icon iconName="subscript-2" />
+            <input {...register("description", {required: "Description is Required"})} id='input-description' type="text" className="grow" placeholder="description"/>
+          </label>
+          <button className="btn btn-primary">Create</button>
+        </form>
+
+        {/* Modal Actions */}
+        <div className="modal-action">
+          <form method="dialog">
+            <button className="btn" onClick={handleClose}>Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+  )
 }
