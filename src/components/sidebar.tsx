@@ -100,7 +100,7 @@ export const Sidebar = () => {
             })
           }
           {
-            !(userCategories.length > 8) && <NavItem icon='more-fill' tooltip='View All Categories' link='/categories' isActive={activeRoute === '/categories'} />
+            <NavItem icon='more-fill' tooltip='View All Categories' link='/categories' isActive={activeRoute === '/categories'} />
           }
           <CreateCategoryButton icon='add-fill' tooltip='Create a Category' />
         </div>

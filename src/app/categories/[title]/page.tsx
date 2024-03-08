@@ -21,6 +21,7 @@ import {
   DeleteCategory,
 } from '@/utilities/services';
 import { EditCategoryModal } from '@/components/modals';
+import { TaskCard } from '@/components/cards';
 
 export default function Page({ params }: { params: {title: string}}) {
   const router = useRouter();
@@ -101,7 +102,7 @@ export default function Page({ params }: { params: {title: string}}) {
     <>
       <EditCategoryModal category={category} />
       <AppTemplate>
-        <div className='w-full flex flex-row justify-between items-center'>
+        <div className='w-full flex flex-row justify-between items-center mb-8'>
           <div className='flex flex-row justify-center items-center gap-4'>
             <button className='btn btn-sm btn-square btn-outline' onClick={() => router.push('/dashboard')}><Icon iconName='arrow-left-fill' className='text-lg'></Icon></button>
             <div className='flex flex-col'>
@@ -114,26 +115,20 @@ export default function Page({ params }: { params: {title: string}}) {
           </div>
           <div className='*:mx-2 *:bg-opacity-25 *:text-neutral'> 
           {/* controls */}
+          <button className='btn btn-square btn-primary hover:text-primary-content' onClick={() => console.log('add tasks handler')}><Icon iconName='add-fill' /></button>
             <button className='btn btn-square btn-primary hover:text-primary-content' onClick={() => editHandler()}><Icon iconName='edit-fill' /></button>
             <button className='btn btn-square btn-error hover:text-error-content' onClick={() => deleteHandler(category.id)}><Icon iconName='delete-bin-6-fill' /></button>
           </div>
         </div>
-        {
-          tasks.map((task, index) => {
-            return (
-              <div key={index} className='w-full flex flex-row justify-between items-center gap-4'>
-                <div className='flex flex-row items-center gap-4'>
-                  <div className='w-4 h-4 rounded-full bg-primary'></div>
-                  <h3 className='text-lg'>{task.title}</h3>
-                </div>
-                <div className='flex flex-row items-center gap-4'>
-                  <h3 className='text-md opacity-55'>{formatTimeAgo(task.updated_at)}</h3>
-                  <button className='btn btn-sm btn-square btn-primary hover:text-primary-content' onClick={() => router.push('/dashboard')}><Icon iconName='edit-fill' /></button>
-                  <button className='btn btn-sm btn-square btn-error hover:text-error-content' onClick={() => router.push('/dashboard')}><Icon iconName='delete-bin-6-fill' /></button>
-                </div>
-              </div>
-            );
-          })}
+        <div className='flex-grow overflow-y-scroll'>
+          {
+            tasks.map((task, index) => {
+              return (
+                <TaskCard key={index} task={task} className='' />
+              );
+            })
+          }
+        </div>
       </AppTemplate>
     </>
   );
