@@ -129,7 +129,7 @@ export function TaskCard({ className, task }: TaskCardProps) {
       setTaskStatus({status: 'IN PROGRESS', color: 'btn-primary', text:'text-primary', bg:'bg-primary', icon: 'checkbox-blank-fill'});
     }
     console.log('render');
-  }, [1]);
+  }, [task]);
 
   const toggleHandler = () => {
     setIsToggled(!isToggled);
@@ -196,7 +196,7 @@ export function TaskCard({ className, task }: TaskCardProps) {
 
   return (
     <>
-      <EditTaskModal modalID={`edit_task_modal`} task={task} />
+      <EditTaskModal key={task.id} modalID={`edit_task_modal`} task={task} />
       <div className='w-full flex flex-row gap-2 justify-center'>
         <button
           className={`btn btn-square ${TaskStatus?.color} hover:text-primary-content`}
@@ -205,7 +205,7 @@ export function TaskCard({ className, task }: TaskCardProps) {
           <Icon iconName={TaskStatus?.icon} className={`${TaskStatus?.text} text-2xl`} />
         </button>
         <div
-          className={`flex-grow btn ${TaskStatus?.color} flex flex-col justify-center items-center gap-4 mb-2`} onClick={toggleHandler}>
+          className={`flex-grow btn ${TaskStatus?.color} flex flex-row justify-between items-center gap-4 mb-2`} onClick={toggleHandler}>
           <div className="flex flex-row items-center gap-4">
             <h3 className="text-lg">{task.title}</h3>
           </div>

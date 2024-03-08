@@ -145,11 +145,11 @@ export default function Page({ params }: { params: {title: string}}) {
         </div>
         <div className='flex-grow overflow-y-scroll'>
           {
-            tasks.map((task, index) => {
+            tasks.map((task) => {
               return (
-                <>
-                  <TaskCard key={index} task={task} className='' />
-                </>
+
+                  <TaskCard key={task.id} task={task} className='' />
+
               );
             })
           }
