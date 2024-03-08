@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '@/utilities/services';
-import { CreateUserCategory, EditUserCategory, UserCategories, CreateUserTask, EditUserTask } from '@/types/app-types';
+import { CreateUserCategory, EditUserCategory, UserCategories, CreateUserTask, EditUserTask, UserTasks } from '@/types/app-types';
 
 import Icon from '@/components/icon';
 import AlertBox from '@/components/alertbox';
@@ -225,7 +225,7 @@ export function EditCategoryModal({category}: {category: UserCategories; }) {
           </label>
           <label htmlFor='input-subtitle' className="input input-ghost form-transition input-primary flex items-center gap-2">
             <Icon iconName="subscript-2" />
-            <input id='input-subtitle' type="text" className="grow" placeholder="Subtitle" defaultValue={category.subtitle}/>
+            <input {...register("subtitle")} id='input-subtitle' type="text" className="grow" placeholder="Subtitle" defaultValue={category.subtitle}/>
           </label>
           <button className="btn btn-primary">Save</button>
         </form>
@@ -264,7 +264,6 @@ export function CreateTaskModal({category}: {category: UserCategories; }) {
     } else {
       console.error('Modal element or showModal() method not available');
     }
-    router.push('/categories/'+category.title);
     location.reload();
     setTimeout(() => (setErrorMessage(null), setError(false)), 5000);
   };
@@ -329,7 +328,85 @@ export function CreateTaskModal({category}: {category: UserCategories; }) {
   )
 }
 
-export function EditTaskModal({task}: {task: EditUserTask; }) {
+export function EditTaskModal({task, modalID}: {task: UserTasks; modalID?: string;}) {
+  const {register, handleSubmit, reset, formState: {errors} } = useForm<EditUserTask>({criteriaMode:"all"});
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const router = useRouter();
 
+  const onSubmit: SubmitHandler<EditUserTask> = (data) => {
+    EditTaskHandler(data);
+    console.log(data);
+    reset(); // Reset form fields
+    const modal = document.getElementById(
+      'edit_task_modal'
+    ) as HTMLDialogElement;
+    if (modal && typeof modal.close === 'function') {
+      modal.close();
+    } else {
+      console.error('Modal element or showModal() method not available');
+    }
+    location.reload();
+    setTimeout(() => (setErrorMessage(null), setError(false)), 5000);
+  };
+
+  async function EditTaskHandler(data: EditUserTask) {
+    try {
+      const response = await axios.put(`${API_URL}/api/v1/tasks/${task.id}`, data, {
+        headers: {
+          'authorization': sessionStorage.getItem('token'),
+          'Accept': 'application/json',
+        }
+      });
+      console.log(response);
+      if (response.status === 201) {
+        setErrorMessage('Task Edited Successfully');
+        setError(false);
+      }
+    }
+    catch (error) {
+      console.error(error);
+      setErrorMessage('Error Editing Task');
+      setError(true);
+    }
+  }
+
+  const handleClose = () => {
+    reset(); // Reset form fields
+    setErrorMessage(null); // Clear error message
+    setError(false); // Clear error state
+  };
+
+  return (
+    <dialog id={'edit_task_modal_'+task.id} className="modal backdrop-blur-sm">
+      <div className="modal-box">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center gap-6 mt-6 animate-fade animate-once animate-ease-in">
+          {/* Warning Boxes */}
+          {error && <AlertBox type='error'>{errorMessage}</AlertBox>}
+          {errors.title && <AlertBox type='warning'>Warning: {errors.title.message}!</AlertBox>}
+          {errors.description && <AlertBox type='warning'>Warning: {errors.description.message}!</AlertBox>}
+
+          {/* Input Fields */}
+          <h3 className="font-bold text-lg">Edit {task.title}</h3>
+          <label htmlFor='input-title' className="input input-ghost form-transition input-primary flex items-center gap-2">
+            <Icon iconName="heading" />
+            <input {...register("title", {required: "Title is Required", max: {value:10, message: "Title is more than 10 characters", }})} id='input-title' type="text" className="grow" placeholder="Title" defaultValue={task.title}/>
+          </label>
+          <label htmlFor='input-description' className="input input-ghost form-transition input-primary flex items-center gap-2">
+            <Icon iconName="subscript-2" />
+            <input {...register("description", {required: "Description is Required"})} id='input-description' type="text" className="grow" placeholder="description" defaultValue={task.description}/>
+          </label>
+          <button className="btn btn-primary">Create</button>
+        </form>
+
+        {/* Modal Actions */}
+        <div className="modal-action">
+          <form method="dialog">
+            <button className="btn" onClick={handleClose}>Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+  )
 }

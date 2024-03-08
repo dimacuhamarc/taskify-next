@@ -5,6 +5,8 @@ import { UserCategories, UserTasks } from '@/types/app-types';
 import formatTimeAgo from '@/utilities/date-formatter';
 import { useRouter } from 'next/navigation';
 
+import { EditTaskModal } from '@/components/modals';
+
 import Icon from '@/components/icon';
 
 import { useState, useEffect, useReducer } from 'react';
@@ -183,8 +185,18 @@ export function TaskCard({ className, task }: TaskCardProps) {
     location.reload();
   }
 
+  const editHandler = () => {
+    const modal = document.getElementById('edit_task_modal_'+task.id) as HTMLDialogElement;
+    if (modal && typeof modal.showModal === 'function') {
+      modal.showModal();
+    } else {
+      console.error('Modal element or showModal() method not available');
+    }
+  }
+
   return (
     <>
+      <EditTaskModal modalID={`edit_task_modal`} task={task} />
       <div className='w-full flex flex-row gap-2 justify-center'>
         <button
           className={`btn btn-square ${TaskStatus?.color} hover:text-primary-content`}
@@ -205,7 +217,7 @@ export function TaskCard({ className, task }: TaskCardProps) {
         </div>
         <button
           className="btn btn-square btn-primary bg-opacity-25 text-neutral hover:text-primary-content"
-          onClick={() => router.push('/tasks/' + task.id)}
+          onClick={() => editHandler()}
         >
           <Icon iconName="edit-fill" />
         </button>

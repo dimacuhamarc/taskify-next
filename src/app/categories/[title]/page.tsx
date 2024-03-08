@@ -20,7 +20,7 @@ import {
   API_URL,
   DeleteCategory,
 } from '@/utilities/services';
-import { CreateTaskModal, EditCategoryModal } from '@/components/modals';
+import { CreateTaskModal, EditCategoryModal, EditTaskModal } from '@/components/modals';
 import { TaskCard } from '@/components/cards';
 
 export default function Page({ params }: { params: {title: string}}) {
@@ -147,7 +147,9 @@ export default function Page({ params }: { params: {title: string}}) {
           {
             tasks.map((task, index) => {
               return (
-                <TaskCard key={index} task={task} className='' />
+                <>
+                  <TaskCard key={index} task={task} className='' />
+                </>
               );
             })
           }
