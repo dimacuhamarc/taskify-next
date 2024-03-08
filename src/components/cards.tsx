@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/icon';
 
 import { useState, useEffect, use } from 'react';
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 import { API_URL } from '@/utilities/services';
 
 interface CategoryCardProps {
@@ -133,10 +133,29 @@ export function TaskCard({ className, task }: TaskCardProps) {
   }
 
   const toggleStatus = () => {
+    async function updateStatus(status: TaskStatus) {
+      try {
+        const response = await axios.put<void>(`${API_URL}/api/v1/tasks/${task.id}`, {
+          status: status,
+        }, {
+          headers: {
+            'authorization': sessionStorage.getItem('token'),
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+          },
+          maxRedirects: 0,
+        });
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
     if (TaskStatus?.status === 'DONE') {
       setTaskStatus({status: 'IN PROGRESS', color: 'btn-primary', text:'text-primary', bg:'bg-primary', icon: 'checkbox-blank-fill'});
+      updateStatus('IN PROGRESS');
     } else {
       setTaskStatus({status: 'DONE', color: 'btn-success', text:'text-success-content', bg: 'bg-success', icon: 'checkbox-fill'});
+      updateStatus('DONE');
     }
   }
 

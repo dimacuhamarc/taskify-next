@@ -240,3 +240,9 @@ export function EditCategoryModal({category}: {category: UserCategories; }) {
     </dialog>
   )
 }
+
+
+export function CreateTaskModal({category}: {category: UserCategories; }) {
+  
+
+}
