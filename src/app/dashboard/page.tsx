@@ -125,7 +125,14 @@ export default function Dashboard() {
 
       <div className='flex flex-col my-5 container bg-primary text-primary-content p-4 px-5 rounded-lg ring-0 ring-primary hover:bg-opacity-25 hover:text-primary hover:ring-1 transition-all ease-in-out'>
         <h1>Hello, {userData?.name}</h1>
-        <h2 className='text-2xl font-bold'>Currently, You have {tasks.length > 1 ? `${tasks.length} tasks` : `${tasks.length} task`} and {categories.length > 1 ? `${categories.length} categories` : `${categories.length} category`}</h2>
+        {(tasks.length > 0 && categories.length > 0) ?
+          <>
+            <h2 className='text-2xl font-bold'>Currently, You have {tasks.length > 1 ? `${tasks.length} tasks` : `${tasks.length} task`} and {categories.length > 1 ? `${categories.length} categories` : `${categories.length} category`}</h2>
+          </> :
+          <>
+            <h2 className='text-2xl font-bold'>You Currently Have No Tasks or Categories</h2>
+          </>
+        }
       </div>
 
       <div className='flex flex-row w-full gap-6'>
