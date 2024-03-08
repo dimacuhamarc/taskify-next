@@ -147,9 +147,7 @@ export default function Page({ params }: { params: {title: string}}) {
           {
             tasks.map((task) => {
               return (
-
-                  <TaskCard key={task.id} task={task} className='' />
-
+                <TaskCard key={task.id} task={task} className='' />
               );
             })
           }

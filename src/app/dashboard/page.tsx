@@ -14,6 +14,30 @@ import { TaskCard } from '@/components/cards';
 export default function Dashboard() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [uncategorizedTasks, setUncategorizedTasks] = useState<UserTasks[]>([]);
+  const [pendingTasks, setPendingTasks] = useState<UserTasks[]>([]);
+
+  useEffect(() => {
+    const fetchPendingTasks = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/v1/tasks`, {
+          headers: {
+            'authorization': sessionStorage.getItem('token'),
+            'Accept': 'application/json',
+          }
+        });
+        if (response.data) {
+          const tasks = response.data;
+          const pendingTasks = tasks.filter((task: any) => task.status.toUpperCase() === 'IN PROGRESS');
+          setPendingTasks(pendingTasks);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchPendingTasks();
+  }, []); // Removed unnecessary dependency
+  
 
   useEffect(() => {
     const fetchUncategorizedTasks = async () => {
@@ -37,8 +61,6 @@ export default function Dashboard() {
     fetchUncategorizedTasks();
   },[2]);
 
-
-
   useEffect(() => {
     if (userData === null) {
       const user = GetUserInfo();
@@ -57,10 +79,16 @@ export default function Dashboard() {
           <h2>{userData?.email} | UID : {userData?.id}</h2>
         </div>
       </div>
-      <div className='flex flex-row w-full'>
+      <div className='flex flex-row w-full gap-6'>
         <div className='flex flex-grow flex-col'>
           <h2 className='text-2xl font-bold'>Pending Tasks</h2>
-          <p>Coming soon!</p>
+          {
+            pendingTasks.length > 0 && pendingTasks.map((task, index) => {
+              return (
+                <TaskCard key={task.id} task={task} className=''/>
+              )
+            })
+          }
         </div>
         <div className='flex flex-grow flex-col'>
           <h2 className='text-2xl font-bold'>Uncategorized Tasks</h2>
