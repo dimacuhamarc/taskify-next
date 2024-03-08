@@ -132,6 +132,9 @@ export default function Dashboard() {
         <div className='flex flex-grow flex-col'>
           <h2 className='text-2xl font-bold'>Pending Tasks</h2>
           {
+            !(pendingTasks.length > 0) && <p>You Currently Have No Pending Tasks</p>
+          }
+          {
             pendingTasks.length > 0 && pendingTasks.map((task, index) => {
               return (
                 <TaskCard key={task.id} task={task} className=''/>
@@ -141,6 +144,9 @@ export default function Dashboard() {
         </div>
         <div className='flex flex-grow flex-col'>
           <h2 className='text-2xl font-bold'>Uncategorized Tasks</h2>
+          {
+            !(uncategorizedTasks.length > 0) && <p>You Currently Have No Uncategorized Tasks</p>
+          }
           {
             uncategorizedTasks.length > 0 && uncategorizedTasks.map((task, index) => {
               return (
