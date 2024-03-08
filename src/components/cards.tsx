@@ -154,11 +154,33 @@ export function TaskCard({ className, task }: TaskCardProps) {
     if (TaskStatus?.status === 'DONE') {
       setTaskStatus({status: 'IN PROGRESS', color: 'btn-primary', text:'text-primary', bg:'bg-primary', icon: 'checkbox-blank-fill'});
       updateStatus('IN PROGRESS');
+      forceUpdate();
     } else {
       setTaskStatus({status: 'DONE', color: 'btn-success', text:'text-success-content', bg: 'bg-success', icon: 'checkbox-fill'});
       updateStatus('DONE');
+      forceUpdate();
     }
-    forceUpdate();
+  }
+
+  const deleteHandler = () => {
+    async function deleteTask(id: number) {
+      try {
+        const response = await axios.delete<void>(`${API_URL}/api/v1/tasks/${id}`, {
+          headers: {
+            'authorization': sessionStorage.getItem('token'),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json', // Add Content-Type header
+          },
+          maxRedirects: 0,
+        });
+        console.log(response);
+        forceUpdate();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    deleteTask(task.id);
+    location.reload();
   }
 
   return (
@@ -189,7 +211,7 @@ export function TaskCard({ className, task }: TaskCardProps) {
         </button>
         <button
           className="btn btn-square btn-error bg-opacity-25 text-neutral hover:text-error-content"
-          onClick={() => router.push('/tasks/' + task.id)}
+          onClick={() => deleteHandler()}
         >
           <Icon iconName="delete-bin-6-fill" />
         </button>

@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '@/utilities/services';
-import { CreateUserCategory, EditUserCategory, UserCategories, CreateUserTask } from '@/types/app-types';
+import { CreateUserCategory, EditUserCategory, UserCategories, CreateUserTask, EditUserTask } from '@/types/app-types';
 
 import Icon from '@/components/icon';
 import AlertBox from '@/components/alertbox';
@@ -327,4 +327,9 @@ export function CreateTaskModal({category}: {category: UserCategories; }) {
       </div>
     </dialog>
   )
+}
+
+export function EditTaskModal({task}: {task: EditUserTask; }) {
+
+
 }
