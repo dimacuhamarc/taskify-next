@@ -59,8 +59,19 @@ export function CreateCategoryModal() {
         }
         router.push('/categories/'+data.title);
       }
-      
-    } 
+    } else {
+        CreateCategoryHandler(data);
+        reset(); // Reset form fields
+        const modal = document.getElementById(
+          'create_category_modal'
+        ) as HTMLDialogElement;
+        if (modal && typeof modal.close === 'function') {
+          modal.close();
+        } else {
+          console.error('Modal element or showModal() method not available');
+        }
+        router.push('/categories/'+data.title);
+    }
     
     setTimeout(() => (setErrorMessage(null), setError(false)), 5000);
   };
