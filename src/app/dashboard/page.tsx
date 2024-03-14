@@ -10,6 +10,16 @@ import { GetUserInfo, API_URL } from '@/utilities/services';
 import axios from 'axios';
 import { TaskCard } from '@/components/cards';
 
+const copy = {
+  cardMsg: {
+    emptyTasks: 'You Currently Have No Tasks',
+    emptyCategories: 'You Currently Have No Categories',
+    emptyPendingTasks: 'You Currently Have No Pending Tasks',
+    emptyUncategorizedTasks: 'You Currently Have No Uncategorized Tasks',
+    emptyAll: 'You Currently Have No Tasks or Categories'
+  }
+}
+
 
 export default function Dashboard() {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -125,14 +135,18 @@ export default function Dashboard() {
 
       <div className='flex flex-col my-5 bg-primary text-primary-content p-4 px-5 rounded-lg ring-0 ring-primary hover:bg-opacity-25 hover:text-primary hover:ring-1 transition-all ease-in-out'>
         <h1>Hello, {userData?.name}</h1>
-        {(tasks.length > 0 && categories.length > 0) ?
-          <>
-            <h2 className='text-2xl font-bold'>Currently, You have {tasks.length > 1 ? `${tasks.length} tasks` : `${tasks.length} task`} and {categories.length > 1 ? `${categories.length} categories` : `${categories.length} category`}</h2>
-          </> : ((tasks.length === 0 ) ? <h2 className='text-2xl font-bold'>You Currently Have No Tasks</h2> : <h2 className='text-2xl font-bold'>You Currently Have No Categories</h2>)
-          // <>
-          //   <h2 className='text-2xl font-bold'>You Currently Have No Tasks or Categories</h2>
-          // </>
-        }
+        <h2 className='text-2xl font-bold'>Here&apos;s a quick summary of your workspace</h2>
+
+        <div className='flex flex-row gap-6 mt-4'>
+          <div className='flex flex-col'>
+            <h3 className='text-2xl font-bold'>{(tasks.length > 0) ? tasks.length : '0'}</h3>
+            <p>Total Tasks</p>
+          </div>
+          <div className='flex flex-col'>
+            <h3 className='text-2xl font-bold'>{(categories.length > 0) ? categories.length : '0'}</h3>
+            <p>Total Categories</p>
+          </div>
+        </div>
       </div>
 
       <div className='flex flex-row w-full gap-6'>
